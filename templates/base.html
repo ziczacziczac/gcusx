@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="cache-control" content="max-age=0">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="-1">
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 11:00:00 GMT">
+    <meta http-equiv="pragma" content="no-cache">
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <title>{{ title }}</title>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+    <script type="text/javascript" src="../static/js/main.js"></script>
+    <script>
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
+        var colors = [window.chartColors.red, window.chartColors.blue, window.chartColors.green, window.chartColors.yellow,
+            window.chartColors.purple, window.chartColors.orange, window.chartColors.grey]
+    </script>
+    <script type="text/javascript">
+        window.onload = function () {
+            load(1, 'algorithm2');
+
+            {#generate_all_time_silhouette({{ cluster_results_sil_random | tojson }},#}
+            {#    {{ cluster_results_sil_history | tojson }})#}
+            {#generate_all_time_number_cluster({{ cluster_results_number_cluster_random | tojson }},#}
+            {#    {{ cluster_resultes_number_cluster_history | tojson }})#}
+            {##}
+            {#generate_all_time_spent_time({{ cluster_results_spent_time_random | tojson }},#}
+            {#    {{ cluster_results_spent_time_history | tojson }})#}
+        };
+    </script>
+</head>
+
+<body>
+<div class="tab">
+    <button class="tablinks" onclick="change_algorithm('algorithm1')" id="defaultOpen">Clustering Algorithm 1</button>
+    <button class="tablinks" onclick="change_algorithm('algorithm2')">Clustering Algorithm 2</button>
+    <button class="tablinks" onclick="change_algorithm('algorithm3')">Clustering Algorithm 3</button>
+    <button class="tablinks" onclick="change_algorithm('algorithm4')">Clustering Algorithm 4</button>
+    <button class="tablinks" onclick="clustering_analytic()">Clustering Analytic</button>
+    <button class="tablinks" onclick="forecast_analytic()">Forecasting Analytic</button>
+</div>
+<div class="tabcontent">
+    <a style="display: inline-block" href="#" onclick="previous_month()" class="previous round">&#8249;</a>
+    <h3 style="display: inline-block" id="current_month">1</h3>
+    <a style="display: inline-block" href="#" onclick="next_month()" class="next round">&#8250;</a>
+</div>
+<div id="algorithm1" class="tabcontent">
+
+    <div id="cluster_means_sample" class="container">
+        <h1>Clustering results</h1>
+    </div>
+
+    <div id="cluster_balance_AR_forecast" class="container">
+        <h1>Forecast with AR(1)</h1>
+    </div>
+    <div id="cluster_balance_MA_forecast" class="container">
+        <h1>Forecast with MA(1)</h1>
+    </div>
+    <div id="cluster_balance_ETS_forecast" class="container">
+        <h1>Forecast with ETS</h1>
+    </div>
+
+    <div id="cluster_monitor_container">
+        <h1>Cluster Monitoring</h1>
+    </div>
+
+    <div class="container">
+
+        <canvas id="cluster_sample_pca2"></canvas>
+        <div class="container">
+
+            <div class="row">
+                <div id="proportion" class="col-md-6">
+                    <canvas id="balance_proportion"></canvas>
+                </div>
+                <div id="balance" class="col-md-6">
+                    <canvas id="balance_chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        {#        <div class="container">#}
+        {#            <div class="row">#}
+        {#                <div id="statistic" class="col-md-6">#}
+        {#                    <canvas id="balance_statistic"></canvas>#}
+        {#                </div>#}
+        {#                <div id="silhouette" class="col-md-6">#}
+        {#                    <canvas id="cluster_silhouette"></canvas>#}
+        {#                </div>#}
+        {#            </div>#}
+        {#        </div>#}
+    </div>
+
+
+    {#    <div id="all_time">#}
+    {#        <canvas id="all_time_silhouette"></canvas>#}
+    {#        <canvas id="all_time_number_cluster"></canvas>#}
+    {#        <canvas id="all_time_spent_time"></canvas>#}
+    {#    </div>#}
+</div>
+
+<div id="clustering_analytic" class="tabcontent">
+    <h1>Clustering Analytics</h1>
+    <div class="container">
+        <div class="row">
+            <div id="compare_silhouette_parent" class="col-md-4">
+                <canvas id="compare_silhouette"></canvas>
+            </div>
+            <div id="compare_spent_time_parent" class="col-md-4">
+                <canvas id="compare_spent_time"></canvas>
+            </div>
+            <div id="compare_number_cluster_parent" class="col-md-4">
+                <canvas id="compare_number_cluster"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="forecast_analytic" class="tabcontent">
+    <h1>Forecasting Analytics</h1>
+    <div>
+        <div id="actual_and_predict_ar" class="container"></div>
+        <div id="rmse_ar" class="container"></div>
+    </div>
+</div>
+</body>
+</html>
